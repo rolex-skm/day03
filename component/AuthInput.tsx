@@ -3,9 +3,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { type Href, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { styled } from 'nativewind';
-import { Controller } from "react-hook-form";
-import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { Controller } from 'react-hook-form';
+import {
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    useWindowDimensions,
+    View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 type AuthInputProps = {
     name: string;
     buttonText: string;
@@ -24,11 +34,13 @@ export default function AuthInput({
     footerHref,
 }: AuthInputProps) {
     const { width, height } = useWindowDimensions();
-    const { control, handleSubmit, formState: { errors } } = useAuthForm();
-
-    // Compare the current window width and height so the auth screen can
-    // switch between a stacked portrait layout and a split landscape layout.
     const isLandscape = width > height;
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useAuthForm();
 
     const onSubmit = (data: { email: string; password: string }) => {
         console.log(data);
@@ -36,100 +48,151 @@ export default function AuthInput({
     };
 
     return (
-        <StyledSafeAreaView className="flex-1 bg-black" edges={['top']}>
-            <StatusBar style="light" backgroundColor="#000000" translucent={false} />
-            <View className="flex-1 bg-amber-100">
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    className="flex-1 bg-amber-100"
-                >
-                    {router.canGoBack() && (
-                        <TouchableOpacity
-                            onPress={() => router.back()}
-                            className="absolute left-5 top-5 h-11 w-11 items-center justify-center rounded-full bg-white/80 z-10"
-                            accessibilityRole="button"
-                            accessibilityLabel="Go back"
-                        >
-                            <Ionicons name="chevron-back" size={26} color="#111827" />
-                        </TouchableOpacity>
-                    )}
-                    <ScrollView
-                        className="flex-1 bg-amber-100"
-                        contentContainerStyle={{ flexGrow: 1 }}
-                        keyboardShouldPersistTaps="handled"
-                        showsVerticalScrollIndicator={false}
-                        automaticallyAdjustKeyboardInsets={true}
+        <StyledSafeAreaView
+            className="flex-1 bg-amber-100"
+            edges={['top']}
+        >
+            <StatusBar
+                style="dark"
+                backgroundColor="#fef3c7"
+                translucent={false}
+            />
+
+            <KeyboardAvoidingView
+                className="flex-1"
+                behavior={
+                    Platform.OS === 'ios'
+                        ? 'padding'
+                        : isLandscape
+                            ? undefined
+                            : 'height'
+                }
+                keyboardVerticalOffset={isLandscape ? 10 : 50}
+            >
+                {/* Back Button */}
+                {router.canGoBack() && (
+                    <TouchableOpacity
+                        onPress={() => router.back()}
+                        className="absolute left-4 top-4 z-20 h-11 w-11 items-center justify-center rounded-full bg-white shadow"
                     >
+                        <Ionicons
+                            name="chevron-back"
+                            size={24}
+                        // color="#111827"
+                        />
+                    </TouchableOpacity>
+                )}
+
+                <ScrollView
+                    className="flex-1"
+                    contentContainerStyle={{
+                        flexGrow: 1,
+                        justifyContent: isLandscape ? 'flex-start' : 'center',
+                    }}
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                    automaticallyAdjustKeyboardInsets
+                >
+                    <View
+                        className={`flex-grow px-5 ${isLandscape
+                            ? 'flex-row items-center justify-start'
+                            : 'flex-col justify-center py-12'
+                            }`}
+                    >
+                        {/* LEFT SIDE */}
                         <View
-                            className={`flex-1 bg-amber-100 px-5 ${isLandscape
-                                ? 'flex-row items-center justify-center gap-8 py-6'
-                                : 'flex-col items-center justify-center py-14'
+                            className={
+                                isLandscape
+                                    ? 'flex-1 max-w-sm items-center justify-center'
+                                    : 'w-full items-center mb-10'
+                            }
+                        >
+                            <Text className="text-3xl font-bold text-red-500">
+                                {name}
+                            </Text>
+                        </View>
+
+                        {/* RIGHT SIDE FORM */}
+                        <View
+                            className={`${isLandscape
+                                ? 'flex-1 max-w-sm rounded-3xl bg-white p-4 shadow-lg'
+                                : 'w-full'
                                 }`}
                         >
-                            <View className={isLandscape ? 'w-5/12 items-center' : 'w-full items-center'}>
-                                <Text className="text-3xl font-bold">
-                                    {name}
+                            {/* EMAIL */}
+                            <Controller
+                                control={control}
+                                name="email"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <TextInput
+                                        placeholder="Email"
+                                        keyboardType="email-address"
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
+                                        value={value}
+                                        onChangeText={onChange}
+                                        onBlur={onBlur}
+                                        disableFullscreenUI
+                                        className="w-full rounded-xl border border-zinc-300 bg-white p-4"
+                                    />
+                                )}
+                            />
+                            {errors.email && (
+                                <Text className="mt-1 text-red-500">
+                                    {errors.email.message}
                                 </Text>
-                            </View>
+                            )}
 
-                            <View className={isLandscape ? 'w-5/12 max-w-md' : 'w-full'}>
-                                <Controller
-                                    control={control}
-                                    name="email"
-                                    render={({ field: { onChange, onBlur, value } }) => (
-                                        <TextInput
-                                            placeholder="Email"
-                                            keyboardType="email-address"
-                                            autoCapitalize="none"
-                                            className="w-full border border-zinc-500 rounded-md p-3 my-2.5"
-                                            onChangeText={onChange}
-                                            onBlur={onBlur}
-                                            value={value}
-                                            disableFullscreenUI={true}
-                                        />
-                                    )}
-                                />
-                                {errors.email && <Text className="text-red-500">{errors.email.message}</Text>}
-                                <Controller
-                                    control={control}
-                                    name='password'
-                                    render={({ field: { onChange, onBlur, value } }) => (
-                                        <TextInput
-                                            placeholder="Password"
-                                            secureTextEntry
-                                            onChangeText={onChange}
-                                            onBlur={onBlur}
-                                            value={value}
-                                            className="w-full border border-zinc-500 rounded-md p-3 my-2.5"
-                                            disableFullscreenUI={true}
-                                        />
-                                    )}
-                                />
-                                {errors.password && <Text className="text-red-500">{errors.password.message}</Text>}
+                            {/* PASSWORD */}
+                            <Controller
+                                control={control}
+                                name="password"
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <TextInput
+                                        placeholder="Password"
+                                        secureTextEntry
+                                        value={value}
+                                        onChangeText={onChange}
+                                        onBlur={onBlur}
+                                        disableFullscreenUI
+                                        className="mt-4 w-full rounded-xl border border-zinc-300 bg-white p-4"
+                                    />
+                                )}
+                            />
+                            {errors.password && (
+                                <Text className="mt-1 text-red-500">
+                                    {errors.password.message}
+                                </Text>
+                            )}
+
+                            {/* BUTTON */}
+                            <TouchableOpacity
+                                onPress={handleSubmit(onSubmit)}
+                                className="mt-6 w-full rounded-xl bg-red-500 p-4 items-center"
+                            >
+                                <Text className="font-bold text-white">
+                                    {buttonText}
+                                </Text>
+                            </TouchableOpacity>
+
+                            {/* FOOTER */}
+                            <View className="mt-5 flex-row justify-center">
+                                <Text className="text-gray-600">
+                                    {footerText}
+                                </Text>
 
                                 <TouchableOpacity
-                                    onPress={handleSubmit(onSubmit)}
-                                    className="bg-red-500 w-full p-4 rounded-md mt-5 items-center"
+                                    onPress={() => router.push(footerHref)}
                                 >
-                                    <Text className="text-white font-bold">
-                                        {buttonText}
+                                    <Text className="ml-1 font-bold text-red-500">
+                                        {footerLinkText}
                                     </Text>
                                 </TouchableOpacity>
-                                <View className="flex-row mt-4 justify-center">
-                                    <Text className="text-gray-600">
-                                        {footerText}
-                                    </Text>
-                                    <TouchableOpacity onPress={() => router.push(footerHref)}>
-                                        <Text className="text-red-500 font-bold ml-1">
-                                            {footerLinkText}
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
                             </View>
                         </View>
-                    </ScrollView>
-                </KeyboardAvoidingView>
-            </View>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </StyledSafeAreaView>
-    )
+    );
 }
