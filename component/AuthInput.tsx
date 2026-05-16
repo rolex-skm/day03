@@ -31,7 +31,7 @@ export default function AuthInput({
             <View className="relative flex-1 items-center justify-center px-5 bg-amber-100">
                 {router.canGoBack() && (
                     <TouchableOpacity
-                        onPress={() => handleSubmit(onSubmit)()}
+                        onPress={() => router.back()}
                         className="absolute left-5 top-5 h-11 w-11 items-center justify-center rounded-full bg-white/80"
                         accessibilityRole="button"
                         accessibilityLabel="Go back"
@@ -75,7 +75,10 @@ export default function AuthInput({
                 />
                 {errors.password && <Text className="text-red-500">{errors.password.message}</Text>}
 
-                <TouchableOpacity className="bg-red-500 w-full p-4 rounded-md mt-5 items-center">
+                <TouchableOpacity
+                    onPress={handleSubmit(onSubmit)}
+                    className="bg-red-500 w-full p-4 rounded-md mt-5 items-center"
+                >
                     <Text className="text-white font-bold">
                         {buttonText}
                     </Text>

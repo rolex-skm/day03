@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 export function useAuthForm() {
   return useForm<AuthFormData>({
     resolver: zodResolver(authSchema),
+    mode: 'onChange',
     defaultValues: {
       email: '',
       password: '',
