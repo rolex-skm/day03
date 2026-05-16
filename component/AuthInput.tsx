@@ -7,13 +7,13 @@ import { Controller } from 'react-hook-form';
 import {
     KeyboardAvoidingView,
     Platform,
-    ScrollView,
     Text,
     TextInput,
     TouchableOpacity,
     useWindowDimensions,
     View,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type AuthInputProps = {
@@ -83,7 +83,7 @@ export default function AuthInput({
                     </TouchableOpacity>
                 )}
 
-                <ScrollView
+                <KeyboardAwareScrollView
                     className="flex-1"
                     contentContainerStyle={{
                         flexGrow: 1,
@@ -91,10 +91,12 @@ export default function AuthInput({
                     }}
                     keyboardShouldPersistTaps="handled"
                     showsVerticalScrollIndicator={false}
-                    automaticallyAdjustKeyboardInsets
+                    enableOnAndroid
+                    extraScrollHeight={10}
+                    enableAutomaticScroll
                 >
                     <View
-                        className={`flex-grow px-5 ${isLandscape
+                        className={`grow px-5 ${isLandscape
                             ? 'flex-row items-center justify-start'
                             : 'flex-col justify-center py-12'
                             }`}
@@ -191,7 +193,7 @@ export default function AuthInput({
                             </View>
                         </View>
                     </View>
-                </ScrollView>
+                </KeyboardAwareScrollView>
             </KeyboardAvoidingView>
         </StyledSafeAreaView>
     );
