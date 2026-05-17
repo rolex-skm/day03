@@ -1,25 +1,59 @@
 import { Redirect } from "expo-router";
-import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Animated, View } from "react-native";
 
 export default function Index() {
   const [ready, setReady] = useState(false);
+  const scaleValue = useRef(new Animated.Value(0.5)).current;
+  const opacityValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const timer = setTimeout(() => setReady(true), 2000);
+    // Start entry animation
+    Animated.parallel([
+      Animated.spring(scaleValue, {
+        toValue: 1,
+        tension: 10,
+        friction: 2,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacityValue, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      })
+    ]).start();
+
+    // Redirect after 2.5 seconds
+    const timer = setTimeout(() => setReady(true), 2500);
     return () => clearTimeout(timer);
   }, []);
-  
-  if(ready) {
+
+  if (ready) {
     return <Redirect href="/signin" />;
   }
-  return(
-    <View className="flex-1 items-center justify-center">
-      <View className="w-16 h-16 bg-red-500 rounded-full animate-pulse">
-        <Text className="text-white text-lg font-bold text-center mt-2">
-          K
-        </Text>
-       </View>
-      </View>
+
+  return (
+    <View className="flex-1 bg-amber-100 items-center justify-center">
+      <Animated.Image 
+        source={require('../assets/images/logo.png')}
+        style={{ 
+          width: 140, 
+          height: 140, 
+          borderRadius: 30,
+          opacity: opacityValue,
+          transform: [{ scale: scaleValue }] 
+        }}
+        resizeMode="contain"
+      />
+      <Animated.Text 
+        style={{ 
+          opacity: opacityValue, 
+          transform: [{ scale: scaleValue }] 
+        }}
+        className="text-red-500 text-4xl font-extrabold mt-6 tracking-widest"
+      >
+        KYOKU
+      </Animated.Text>
+    </View>
   )
 }

@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { type Href, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { styled } from 'nativewind';
+import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import {
     KeyboardAvoidingView,
@@ -13,6 +14,7 @@ import {
     useWindowDimensions,
     View,
 } from 'react-native';
+import AwesomeAlert from 'react-native-awesome-alerts';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -36,6 +38,9 @@ export default function AuthInput({
     const { width, height } = useWindowDimensions();
     const isLandscape = width > height;
 
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertData, setAlertData] = useState({ title: '' });
+
     const {
         control,
         handleSubmit,
@@ -43,13 +48,15 @@ export default function AuthInput({
     } = useAuthForm();
 
     const onSubmit = (data: { email: string; password: string }) => {
-        console.log(data);
-        alert(`Email: ${data.email}\nPassword: ${data.password}`);
+        setAlertData({
+            title: 'Login Successful',
+        });
+        setShowAlert(true);
     };
 
     return (
         <StyledSafeAreaView
-            className="flex-1 bg-amber-100"
+            className="flex-1 bg-white"
             edges={['top']}
         >
             <StatusBar
@@ -195,6 +202,22 @@ export default function AuthInput({
                     </View>
                 </KeyboardAwareScrollView>
             </KeyboardAvoidingView>
+
+            <AwesomeAlert
+                show={showAlert}
+                showProgress={false}
+                title={alertData.title}
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showConfirmButton={true}
+                confirmText="Great!"
+                confirmButtonColor="#EF4444"
+                titleStyle={{ fontSize: 17, fontWeight: 'bold', color: '#1F2937' }}
+                onConfirmPressed={() => {
+                    setShowAlert(false);
+                    router.push("/home");
+                }}
+            />
         </StyledSafeAreaView>
     );
 }

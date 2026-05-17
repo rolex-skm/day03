@@ -3,16 +3,18 @@ import { Stack } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
 import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
 export default function RootLayout() {
   useEffect(() => {
-    SystemUI.setBackgroundColorAsync("#f3f4f6");
+    SystemUI.setBackgroundColorAsync("#ffffff");
   }, []);
 
   return (
-    <>
-      <StatusBar style="light" backgroundColor="#000000" />
+    <SafeAreaProvider>
+      <StatusBar style="light" backgroundColor="#ffffff" />
       <Stack screenOptions={{ headerShown: false, animation: "none" }} />
-    </>
+    </SafeAreaProvider>
   )
 
 }
