@@ -35,7 +35,7 @@ export default function Index() {
   return (
     <View className="flex-1 bg-amber-100 items-center justify-center">
       <Animated.Image 
-        source={require('../assets/images/logo.png')}
+        source={require('../assets/images/logo.jpg')}
         style={{ 
           width: 140, 
           height: 140, 

@@ -12,11 +12,11 @@ import {
     TextInput,
     TouchableOpacity,
     useWindowDimensions,
-    View,
+    View
 } from 'react-native';
-import AwesomeAlert from 'react-native-awesome-alerts';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ModalComponet from './Modal';
 
 type AuthInputProps = {
     name: string;
@@ -66,7 +66,8 @@ export default function AuthInput({
             />
 
             <KeyboardAvoidingView
-                className="flex-1"
+                className={`flex-1 ${showAlert ? 'opacity-50' : ''}`}
+                pointerEvents={showAlert ? 'none' : 'auto'}
                 behavior={
                     Platform.OS === 'ios'
                         ? 'padding'
@@ -202,21 +203,11 @@ export default function AuthInput({
                     </View>
                 </KeyboardAwareScrollView>
             </KeyboardAvoidingView>
-
-            <AwesomeAlert
-                show={showAlert}
-                showProgress={false}
-                title={alertData.title}
-                closeOnTouchOutside={true}
-                closeOnHardwareBackPress={false}
-                showConfirmButton={true}
-                confirmText="Great!"
-                confirmButtonColor="#EF4444"
-                titleStyle={{ fontSize: 17, fontWeight: 'bold', color: '#1F2937' }}
-                onConfirmPressed={() => {
-                    setShowAlert(false);
-                    router.push("/home");
-                }}
+            <ModalComponet
+                showAlert={showAlert}
+                setShowAlert={setShowAlert}
+                alertData={alertData}
+                router={router}
             />
         </StyledSafeAreaView>
     );
