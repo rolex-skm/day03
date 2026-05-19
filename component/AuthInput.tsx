@@ -40,6 +40,7 @@ export default function AuthInput({
 
     const [showAlert, setShowAlert] = useState(false);
     const [alertData, setAlertData] = useState({ title: '' });
+    const [showPassword, setShowPassword] = useState(false);
 
     const {
         control,
@@ -136,6 +137,7 @@ export default function AuthInput({
                                 render={({ field: { onChange, onBlur, value } }) => (
                                     <TextInput
                                         placeholder="Email"
+                                        placeholderTextColor="#71717a"
                                         keyboardType="email-address"
                                         autoCapitalize="none"
                                         autoCorrect={false}
@@ -143,6 +145,9 @@ export default function AuthInput({
                                         onChangeText={onChange}
                                         onBlur={onBlur}
                                         disableFullscreenUI
+                                        cursorColor="#ef4444"
+                                        selectionColor="#ef4444"
+                                        style={{ color: '#18181b' }}
                                         className="w-full rounded-xl border border-zinc-300 bg-white p-4"
                                     />
                                 )}
@@ -158,15 +163,33 @@ export default function AuthInput({
                                 control={control}
                                 name="password"
                                 render={({ field: { onChange, onBlur, value } }) => (
-                                    <TextInput
-                                        placeholder="Password"
-                                        secureTextEntry
-                                        value={value}
-                                        onChangeText={onChange}
-                                        onBlur={onBlur}
-                                        disableFullscreenUI
-                                        className="mt-4 w-full rounded-xl border border-zinc-300 bg-white p-4"
-                                    />
+                                    <View className="mt-4 w-full">
+                                        <TextInput
+                                            placeholder="Password"
+                                            placeholderTextColor="#71717a"
+                                            secureTextEntry={!showPassword}
+                                            value={value}
+                                            onChangeText={onChange}
+                                            onBlur={onBlur}
+                                            disableFullscreenUI
+                                            cursorColor="#ef4444"
+                                            selectionColor="#ef4444"
+                                            style={{ color: '#18181b' }}
+                                            className="w-full rounded-xl border border-zinc-300 bg-white p-4 pr-12"
+                                        />
+                                        <TouchableOpacity
+                                            onPress={() => setShowPassword((prev) => !prev)}
+                                            className="absolute right-4 top-0 h-full items-center justify-center"
+                                            accessibilityRole="button"
+                                            accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+                                        >
+                                            <Ionicons
+                                                name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                                                size={22}
+                                                color="#71717a"
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
                                 )}
                             />
                             {errors.password && (

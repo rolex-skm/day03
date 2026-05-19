@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, StatusBar, Text, View } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DATA = [
   { id: '1', title: 'Item 1' },
@@ -63,16 +63,21 @@ const Item = ({ title }: ItemProps) => (
   </View>
 );
 
-const Home = () => (
-  <SafeAreaProvider>
+const Home = () => {
+  const insets = useSafeAreaInsets();
+
+  return (
     <SafeAreaView className='flex-1' style={{ marginTop: StatusBar.currentHeight || 0 }}>
       <FlatList
         data={DATA}
         renderItem={({ item }) => <Item title={item.title} />}
         keyExtractor={item => item.id}
+        contentContainerStyle={{
+          paddingBottom: 96 + insets.bottom,
+        }}
       />
     </SafeAreaView>
-  </SafeAreaProvider>
-);
+  );
+};
 
 export default Home;
